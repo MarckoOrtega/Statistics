@@ -1,0 +1,46 @@
+
+
+import numpy as np
+import pandas as pd
+from scipy.spatial.distance import cdist
+from scipy.spatial.distance import pdist
+from scipy import stats
+
+#Matriz de tenenica
+A = np.array([[1,4,7],
+              [2,5,8],
+              [3,6,9]])
+
+A2 = np.array([[1,4,7],
+               [2,5,8],
+               [3,6,9],
+               [1,4,7]])
+
+A2z = stats.zscore(A2)
+
+
+AT = np.transpose(A)
+AT2 = np.transpose(A2z)
+
+signo = np.array([[0,  1,  1, -1,  0,  0, -1,  0,  0],
+                  [0, -1,  0,  1,  0,  1,  0, -1,  0],
+                  [0,  0, -1,  0,  0, -1,  1,  1,  0]])
+
+signo2 = np.array([[ 1, 1, 0],
+                   [-1, 0, 1],
+                   [ 0,-1,-1]])
+
+signo3 = np.array([[ 1, 1, 1, 0, 0, 0],
+                   [-1, 0, 0, 1, 1, 0],
+                   [ 0,-1, 0,-1, 0, 1],
+                   [ 0, 0,-1, 0,-1,-1]])
+
+B = np.dot(AT,signo2)
+B2 = np.dot(AT2,signo3)
+D = np.sqrt(np.dot(np.transpose(B),B))
+D2 = np.sqrt(np.dot(np.transpose(B2),B2))
+
+#print(B)
+print(np.diag(D))
+#print(B2)
+print(np.diag(D2))
