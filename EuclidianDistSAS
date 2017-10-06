@@ -1,0 +1,17 @@
+data A;
+input CLIENTE $1-2 P1 P2 P3;
+datalines;
+C1 1 4 7
+C2 2 5 8
+C3 3 6 9
+C4 1 4 7
+;
+run;
+
+proc distance data=a out=D method=EUCLID;
+var interval(P1--P3 / std=Std);
+id CLIENTE;
+run;
+proc print data=D;
+title2 'First 10 Observations in Output Data Set from PROC DISTANCE';
+run;
