@@ -1,46 +1,73 @@
 
-
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import cdist
-from scipy.spatial.distance import pdist
+from scipy.spatial import distance
 from scipy import stats
+from sklearn import preprocessing as pr
 
-#Matriz de tenenica
-A = np.array([[1,4,7],
-              [2,5,8],
-              [3,6,9]])
+A = np.array([[1,2,3],
+             [4,5,6],
+             [7,8,9]])
 
-A2 = np.array([[1,4,7],
-               [2,5,8],
-               [3,6,9],
-               [1,4,7]])
-
-A2z = stats.zscore(A2)
+S = np.array([[ 1, 1, 0],
+              [-1, 0, 1],
+              [ 0,-1,-1]])
 
 
-AT = np.transpose(A)
-AT2 = np.transpose(A2z)
 
-signo = np.array([[0,  1,  1, -1,  0,  0, -1,  0,  0],
-                  [0, -1,  0,  1,  0,  1,  0, -1,  0],
-                  [0,  0, -1,  0,  0, -1,  1,  1,  0]])
+AS = stats.zscore(A,ddof=1)
 
-signo2 = np.array([[ 1, 1, 0],
-                   [-1, 0, 1],
-                   [ 0,-1,-1]])
+AT  = np.transpose(A)
+ATS  = np.transpose(AS)
 
-signo3 = np.array([[ 1, 1, 1, 0, 0, 0],
-                   [-1, 0, 0, 1, 1, 0],
-                   [ 0,-1, 0,-1, 0, 1],
-                   [ 0, 0,-1, 0,-1,-1]])
+CI = 1/(np.cov(A,ddof=0))
 
-B = np.dot(AT,signo2)
-B2 = np.dot(AT2,signo3)
-D = np.sqrt(np.dot(np.transpose(B),B))
-D2 = np.sqrt(np.dot(np.transpose(B2),B2))
+R = np.dot(AT,S)
+RS = np.dot(ATS,S)
 
-#print(B)
+
+D1 = np.sqrt(np.dot(np.transpose(R),R))
+D = np.sqrt(D1)
+DD = np.sqrt(np.abs(np.dot(np.transpose(R),CI)))
+DC = np.sqrt(np.abs(np.dot(DD,R)))
+DS = np.sqrt(np.dot(np.transpose(RS),RS))
+
+print('R:')
+print(R)
+print('RT:')
+print(np.transpose(R))
+print('D1:')
+print(D1)
+print('D:')
+print(D)
+
+print('C:')
+print(np.cov(A,ddof=0))
+print('CI:')
+print(1/(np.cov(A,ddof=0)))
+
+print('CI2:')
+#print(np.linalg.inv(np.cov(A,ddof=0)))
+
+print('R:')
+print(np.dot(np.transpose(R),CI))
+
+print('A:')
+print(A)
+print('AS:')
+print(AS)
+print('D:')
 print(np.diag(D))
-#print(B2)
-print(np.diag(D2))
+print('DS:')
+print(np.diag(DS))
+print('DC:')
+print(np.diag(DC))
+
+
+cv = np.reshape(np.diag(np.cov(AT, ddof=0)),(3,3))
+
+#print(x)
+#print(y)
+print(cv)
+#print(distance.mahalanobis(x,y,cv))
+
