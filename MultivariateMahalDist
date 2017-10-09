@@ -1,0 +1,31 @@
+import numpy as np
+import pandas as pd
+from scipy.spatial.distance import cdist
+from scipy.spatial.distance import pdist
+from scipy.spatial import distance
+from scipy import stats
+
+filename = 'C:\Datasets\PROTEIN_STD.csv'
+protein_data = pd.read_csv(filename, sep=';')
+#Matriz de tenenica
+A = protein_data.as_matrix(columns=['RedMeat','WhiteMeat','Eggs','Milk','Fish','Cereal','Starch','Nuts','FruitVeg'])
+
+AT = np.transpose(A)
+COV = np.cov(AT,ddof=0)
+DCOV = np.diagflat(np.diag(COV))
+INVCOV = np.linalg.inv(DCOV)
+
+# Cálculo de la matriz de distancias
+rows, cols = AT.shape
+R = np.zeros((rows,cols))
+D = np.zeros((cols,cols))
+for j in range(cols):
+    for i in range(cols):
+        #R[:,i] = AT[:,1] - AT[:,i]
+        R[:,i] = AT[:, j] - AT[:, i]
+    D[j,:] = np.diag(np.sqrt(np.dot(np.dot(np.transpose(R),INVCOV),R)))
+    #D[j, :] = np.diag(np.sqrt(np.dot(np.transpose(R), R)))
+
+print(D)
+
+
